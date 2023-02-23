@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Copy Link Button Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+    <header class="bg-dark py-5">
+        <div class="container">
+            <h1 class="text-white">Copy Link Button Generator</h1>
+            <p class="lead text-white">Generate code for a button that copies a link to the clipboard</p>
+        </div>
+    </header>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Enter the link you want to copy:</h2>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="linkInput" placeholder="https://example.com">
+                    <button class="btn btn-primary" type="button" onclick="generateCode()"><i class="fas fa-code"></i>
+                        Generate Code</button>
+                </div>
+                <hr>
+                <h2 class="card-title">Copy and paste the following code on your webpage:</h2>
+                <pre id="code"></pre>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-3 fixed-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Copy Link Button Generator</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-0 text-md-end">Built with <a href="https://getbootstrap.com" target="_blank">Bootstrap
+                            5</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        function generateCode() {
+            // Get the link from the input field
+            var link = document.getElementById("linkInput").value;
+            // Escape special characters in the link
+            var escapedLink = link.replace(/"/g, "&quot;");
+            // Generate the code for the button
+            var code = '<button onclick="copyToClipboard(\'' + escapedLink + '\')">Copy Link</button>\n';
+            // Generate the JavaScript code that makes the button work
+            code += '<script>\n';
+            code += 'function copyToClipboard(text) {\n';
+            code += '  // Create a temporary input element to hold the text\n';
+            code += '  var input = document.createElement("input");\n';
+            code += '  input.setAttribute("type", "text");\n';
+            code += '  input.setAttribute("value", text);\n';
+            code += '  // Add the input element to the document\n';
+            code += '  document.body.appendChild(input);\n';
+            code += '  // Select the text in the input element\n';
+            code += '  input.select();\n';
+            code += '  // Copy the selected text to the clipboard\n';
+            code += '  document.execCommand("copy");\n';
+            code += '  // Remove the input element from the document\n';
+            code += '  document.body.removeChild(input);\n';
+            code += '}\n';
+            code += '<' + '/script>';
+            // Display the code in the pre tag
+            document.getElementById("code").textContent = code;
+        }
+    </script>
+</body>
+
+</html>
