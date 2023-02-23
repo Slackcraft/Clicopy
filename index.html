@@ -6,6 +6,28 @@
     <title>Clicopy - Copy Link Button Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        #copyRawCodeButton {
+            display: none;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: #333;
+            padding: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,20 +40,40 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title">Enter the link you want to copy:</h2>
+                <h4 class="card-title">Enter the link you want to copy:</h4>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" id="linkInput" placeholder="https://example.com">
                     <button class="btn btn-primary" type="button" onclick="generateCode()"><i class="fas fa-code"></i>
                         Generate Code</button>
                 </div>
                 <hr>
-                <h2 class="card-title">Copy and paste the following code on your webpage:</h2>
+                <h4 class="card-title mb-4">Copy and paste the following code on your webpage:</h4>
                 <pre id="code"></pre>
+                <button id="copyRawCodeButton" class="btn btn-primary" onclick="copyToClipboard()">Copy Raw
+                    Code</button>
+
+
+
             </div>
         </div>
+        <div class="card mt-3 mb-5">
+            <div class="card-header">
+                How to the Use the Code
+            </div>
+            <div class="card-body">
+                <p class="card-text">To use this on your website, copy the Button code into your HTML file where
+                    you want
+                    the button to appear. Then, place the <code>&lt;script&gt;</code> tag at the bottom of the
+                    <code>&lt;body&gt;</code> section, just before the closing <code>&lt;/body&gt;</code> tag.
+                </p>
+            </div>
+        </div>
+
     </div>
 
-    <footer class="bg-light py-3 fixed-bottom">
+
+
+    <footer class="bg-light py-3">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -53,10 +95,12 @@
             // Escape special characters in the link
             var escapedLink = link.replace(/"/g, "&quot;");
             // Generate the code for the button
-            var code = '<button onclick="copyToClipboard(\'' + escapedLink + '\')">Copy Link</button>\n';
+            var code = '<button onclick="copyToClipboard(\'' + escapedLink + '\', this)">Copy Link</button>\n';
+            // Label the button code with a comment
+            code += '<!-- Button Code -->\n\n';
             // Generate the JavaScript code that makes the button work
             code += '<script>\n';
-            code += 'function copyToClipboard(text) {\n';
+            code += 'function copyToClipboard(text, button) {\n';
             code += '  // Create a temporary input element to hold the text\n';
             code += '  var input = document.createElement("input");\n';
             code += '  input.setAttribute("type", "text");\n';
@@ -69,10 +113,35 @@
             code += '  document.execCommand("copy");\n';
             code += '  // Remove the input element from the document\n';
             code += '  document.body.removeChild(input);\n';
+            code += '  // Change the button text to "Copied!"\n';
+            code += '  button.innerHTML = "Copied!";\n';
+            code += '  // Change the button back to "Copy Link" after 3 seconds\n';
+            code += '  setTimeout(function() { button.innerHTML = "Copy Link"; }, 3000);\n';
             code += '}\n';
             code += '<' + '/script>';
+            // Add a line space between the Button Code and Script code
+            code += '\n\n';
             // Display the code in the pre tag
             document.getElementById("code").textContent = code;
+            // Show the Copy Raw Code Button
+            document.getElementById("copyRawCodeButton").style.display = "block";
+        }
+    </script>
+
+
+
+
+    <script>
+        function copyToClipboard() {
+            const code = document.getElementById("code").textContent.trim();
+            navigator.clipboard.writeText(code)
+                .then(() => {
+                    alert("Code copied to clipboard!");
+                })
+                .catch((err) => {
+                    console.error("Failed to copy code: ", err);
+                });
+
         }
     </script>
 </body>
